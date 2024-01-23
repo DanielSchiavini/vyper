@@ -1,6 +1,6 @@
-import copy
 import functools
 import math
+from copy import deepcopy
 from dataclasses import dataclass
 
 import cbor2
@@ -214,12 +214,12 @@ def apply_line_numbers(func):
 
 
 @apply_line_numbers
-def compile_to_assembly(code, optimize=OptimizationLevel.GAS):
+def compile_to_assembly(code, optimize=OptimizationLevel.GAS, copy=True):
     global _revert_label
     _revert_label = mksymbol("revert")
 
     # don't overwrite ir since the original might need to be output, e.g. `-f ir,asm`
-    code = copy.deepcopy(code)
+    code = deepcopy(code) if copy else code
     _rewrite_return_sequences(code)
 
     res = _compile_to_assembly(code)
