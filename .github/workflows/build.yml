@@ -87,13 +87,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
+        id: artifact-download
         with:
           path: artifacts/
+          merge-multiple: true
 
       - name: Upload assets
-        # fun - artifacts are downloaded into "artifact/".
-        # TODO: this needs to be tested since the upgrade to upload-artifact v4
-        working-directory: artifacts/artifact
+        working-directory: ${{ steps.artifact-download.outputs.download-path }}
         run: |
           set -Eeuxo pipefail
           for BIN_NAME in $(ls)
